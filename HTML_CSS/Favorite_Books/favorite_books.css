@@ -58,7 +58,7 @@ ol {
     display: flex; 
     flex-direction: column;
     justify-content: space-around;
-
+    border-radius: 25px;
   }
   .list li {
     padding: 15px; 
