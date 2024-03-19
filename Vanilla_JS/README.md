@@ -1,1 +1,1 @@
-# Vanilla_JS
+The Projects I Completed While Learning JS
