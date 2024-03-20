@@ -1,0 +1,44 @@
+<!-- This program is my first JS program.
+When the button is pressed the blue color of the paragraph to red-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My first JS Project</title>
+        <style>
+
+            p {
+                color: blue; 
+                text-align: center; 
+                padding: 10px; 
+                background-color: grey; 
+                margin: 100px; 
+            }
+        </style>
+    </head>
+    <body>
+        <h1>My First JS</h1>
+
+        <br><p id="text"><b>This is a sentence, please</b></p><br>
+        <button id="button">Click Me</button>
+
+        <script>
+
+            // function attached to the button
+            document.getElementById("button").onclick = function() {
+
+                // variable attached to the sentence 
+                var text = document.getElementById("text"); 
+
+                // if the sentence is blue, then change to red, else change back to blue 
+                if(text.style.color == "blue") {
+
+                    text.style.color = "red"; 
+                }
+                else {
+
+                    text.style.color = "blue"; 
+                }
+            }
+        </script>
+    </body>
+</html>

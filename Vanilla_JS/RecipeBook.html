@@ -1,0 +1,255 @@
+
+<!--
+Harrison S. Holt
+February 5, 2024 
+
+"Recipe Book" web application? In this project, you can build a web app that allows users to:
+
+Features:
+
+1. Add Recipes: Users can add new recipes to their recipe book, including a title, ingredients, and instructions.
+
+2. Edit Recipes: Users can edit existing recipes to update the title, ingredients, or instructions.
+
+3. Delete Recipes: Users can delete recipes they no longer need.
+
+4. View Recipes: Users can view a list of their saved recipes with a summary (e.g., title and ingredients) and click to view the full details of a recipe.
+
+5. Search Recipes: Implement a search feature that allows users to search for recipes by title or ingredients.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Recipe Book</title>
+        <style>
+            body {
+                background-color: beige;
+            }
+            #container {
+
+                margin: auto; 
+                padding: 10px; 
+                border: 2px solid;
+                border-color: burlywood;
+                width: 50%; 
+                text-align: center; 
+                background-color: #808000;
+
+            }
+
+            #recipe_list {
+
+                text-align: center; 
+            }
+
+            #view_recipes {
+
+                float: left; 
+                width: 48%;
+                border: 2px solid burlywood;
+            }
+            
+            #edit_search_recipes {
+
+                float: right;
+                width: 48%; 
+                border: 2px solid burlywood; 
+            }
+        </style>
+    </head>
+    <body>
+
+        <div id="container">
+        <h1>Recipe Book</h1>
+
+        <label for="recipe_name">Recipe Name</label><br>
+        <input id="recipe_name" placeholder="Add a recipe name" required><br>
+
+        <label for="ingredients">Ingredients</label><br>
+        <textarea id="ingredients" placeholder="Enter ingredients" rows="10" required></textarea><br>
+
+        <label for="instructions">Instructions</label><br>
+        <textarea id="instructions" placeholder="Enter instructions" rows="10" required></textarea><br>
+
+        <button id="submit">Submit</button><br><br>
+        </div>
+
+        <hr>
+
+        <div id="view_recipes">
+        <h3>Recipes</h3>
+
+        <div id="recipe_list"></div>
+        </div>
+
+        <div id="edit_search_recipes">
+            <label for="search">Search Recipes</label><br>
+            <input id="search" type="text" placeholder="Search For Recipes">
+            
+        </div>
+        <script>
+
+            // displaying the recipe names in a list 
+            var button = document.getElementById("submit"); 
+
+            button.addEventListener('click', function() {
+
+                var recipe_name = document.getElementById("recipe_name").value.trim(); 
+                var ingredients = document.getElementById("ingredients").value; 
+                var instructions = document.getElementById("instructions").value; 
+
+               var li = document.createElement('li'); 
+               li.textContent = recipe_name;            
+
+
+
+            // add a remove button to each recipe 
+            var removeBtn = document.createElement('button'); 
+            removeBtn.textContent = 'Remove'; 
+
+            removeBtn.onclick = function() {
+
+                li.remove(); 
+            }
+
+            li.appendChild(removeBtn);
+
+            var editBtn = document.createElement('button'); 
+            editBtn.textContent = 'Edit'; 
+
+            editBtn.onclick = function() {
+
+                if(editBtn == 'Edit') {
+
+                    editBtn.textContent = 'Save'; 
+
+                    var recipe_name_edit = document.createElement('input');
+                    recipe_name_edit.value = recipe_name;
+
+                    var ingredients_edit = document.createElement('textreea'); 
+                    ingredients_edit.value = ingredients; 
+
+                    var instructions_edit = document.createElement('textarea'); 
+                    instructions_edit.value = instructions; 
+
+
+
+                }
+                
+            }
+
+            li.appendChild(editBtn);
+
+            var recipe_details = document.createElement('div'); 
+            recipe_details.style.display = 'none'; 
+
+            var ingredients_text = document.createElement('p'); 
+            ingredients_text.textContent = "Ingredients: " + ingredients; 
+
+            var instructions_text = document.createElement('p');
+            instructions_text.textContent = "Instructions: " + instructions; 
+
+            recipe_details.appendChild(ingredients_text);
+            recipe_details.appendChild(instructions_text); 
+
+            li.appendChild(recipe_details); 
+            document.getElementById("recipe_list").append(li); 
+
+            document.getElementById("recipe_name").value = ""; 
+            document.getElementById("ingredients").value = "";
+            document.getElementById("instructions").value = ""; 
+
+            var editBtn = document.createElement('button'); 
+            editBtn.textContent = 'Edit'; 
+            editBtn.onclick = function() {
+    // Check if we're in "Edit" mode
+    if (editBtn.textContent === 'Edit') {
+        // Switch to "Save" mode
+        editBtn.textContent = 'Save';
+
+        // Make current text fields editable
+        // For recipe name
+        var currentName = li.firstChild.textContent;
+        var nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.value = currentName;
+        li.replaceChild(nameInput, li.firstChild);
+
+        // For ingredients, correcting the typo from 'textreea' to 'textarea'
+        var currentIngredients = ingredients_text.textContent.replace("Ingredients: ", "");
+        var ingredientsInput = document.createElement('textarea');
+        ingredientsInput.value = currentIngredients;
+        recipe_details.replaceChild(ingredientsInput, ingredients_text);
+
+        // For instructions
+        var currentInstructions = instructions_text.textContent.replace("Instructions: ", "");
+        var instructionsInput = document.createElement('textarea');
+        instructionsInput.value = currentInstructions;
+        recipe_details.replaceChild(instructionsInput, instructions_text);
+    } else {
+        // Switch back to "Edit" mode
+        editBtn.textContent = 'Edit';
+
+        // Save edited values back to text
+        var editedName = li.firstChild.value;
+        var editedIngredients = recipe_details.firstChild.value;
+        var editedInstructions = recipe_details.lastChild.value;
+
+        // Update the display elements with new values
+        var newName = document.createTextNode(editedName);
+        li.replaceChild(newName, li.firstChild);
+
+        ingredients_text = document.createElement('p');
+        ingredients_text.textContent = "Ingredients: " + editedIngredients;
+        recipe_details.replaceChild(ingredients_text, recipe_details.firstChild);
+
+        instructions_text = document.createElement('p');
+        instructions_text.textContent = "Instructions: " + editedInstructions;
+        recipe_details.replaceChild(instructions_text, recipe_details.lastChild);
+    }
+};
+
+            }); 
+
+
+            // show the details of a recipe when the recipe name is clicked on 
+            recipe_list.addEventListener('click', function() {
+
+                if(event.target.tagName == 'LI') {
+
+                    var additionalDetials = event.target.querySelector('div'); 
+                    if(additionalDetials) {
+                        additionalDetials.style.display = additionalDetials.style.display == 'none' ? 'block': 'none'; 
+                    }
+
+                }
+            }); 
+
+
+
+         // Filter/Search feature
+        document.getElementById("search").addEventListener('keyup', function() {
+
+            var search = this.value.toLowerCase(); 
+            var recipe_search = document.getElementsByTagName('li'); 
+
+            for(let i = 0; i < recipe_search.length; i++) {
+
+                var text = recipe_search[i].textContent || recipe_search[i].innerText; 
+
+                if(text.toLowerCase().indexOf(search) > -1) {
+
+                    recipe_search[i].style.display=""; 
+
+                } else {
+
+                    recipe_search[i].style.display="none"; 
+                }
+            }
+        }); 
+
+
+
+       </script>
+    </body>
+</html>

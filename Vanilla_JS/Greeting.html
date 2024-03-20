@@ -1,0 +1,37 @@
+<!--Build a form where users can enter their name. Upon submission, 
+    display a personalized greeting without refreshing the page.-->
+
+
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>JS greeting</title>
+    </head>
+    <body>
+
+        <h1>JS greeting</h1>
+
+        <form id="form">
+            <input id="name" type="text" placeholder="Enter name">
+            <button id="button">Submit</button>
+        </form>
+        <br><br>
+        <div id="greeting"></div>
+
+        <script>
+
+           var button = document.getElementById("button"); 
+           var greeting = document.getElementById("greeting"); 
+
+           button.addEventListener('click', function() {
+
+            var name = document.getElementById("name").value; 
+
+            event.preventDefault(); 
+                greeting.textContent = "Hello! " + name + "!"; 
+
+           }); 
+        </script>
+    </body>
+</html>

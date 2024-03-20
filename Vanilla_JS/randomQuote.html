@@ -1,0 +1,108 @@
+<!--
+
+Harrison S. Holt 
+February 6, 2024 
+
+"Random Quote Generator" web application that fetches random quotes from a public API and displays them to the user. This project will introduce you to working with APIs and displaying dynamic content on a web page.
+
+Features:
+
+Fetch Quotes: Use a public API (such as the Quotable API) to fetch random quotes.
+
+Display Quotes: Display the fetched quotes on the web page, including the quote text and the author's name.
+
+Randomize: Implement a button that allows users to fetch a new random quote.
+
+Share Quote: Add a button or feature that allows users to share the current quote on social media (optional).
+
+Responsive Design: Ensure that the web app is responsive and looks good on both desktop and mobile devices.
+
+Advanced Features:
+
+Categories or Themes: Allow users to choose a category or theme for the quotes (e.g., motivational, inspirational, funny). Fetch quotes based on the selected category.
+
+Favorite Quotes: Implement a feature that allows users to mark quotes as favorites and view their collection of favorite quotes.
+
+Search Quotes: Add a search functionality that enables users to search for quotes by keywords or author names.
+
+Pagination: If the API supports pagination, allow users to navigate through multiple pages of quotes.
+
+Customization: Let users customize the appearance of the quotes (e.g., font size, color themes).
+
+Quotes History: Keep a history of previously fetched quotes, allowing users to revisit them.
+-->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Random Quote Generator</title>
+        <style>
+            body {
+                background-color: blanchedalmond;
+            }
+            #view_quote_area {
+
+                width: 50%;
+                margin: auto; 
+                padding: 10px; 
+                border: 2px solid black; 
+            }
+            #quote_button {
+
+                width: 100%;
+                margin: auto; 
+                padding: 10px; 
+            }
+        </style>
+    </head>
+    <body>
+
+        <h1 style="text-align: center">Random Quote Generator</h1>
+
+        <div id="view_quote_area"></div><br><br><br>
+        <button id="quote_button">Generate</button>
+
+        <hr>
+
+        <button id="share_twitter">Share on Twitter!</button>
+
+        <script>
+
+            document.getElementById("share_twitter").addEventListener('click', function() {
+
+                var quote = document.getElementById("view_quote_area").textContent; 
+                var tweetUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(quote);
+
+                window.open(tweetUrl, '_blank'); 
+            }); 
+
+            var quote_area = document.getElementById("view_quote_area"); 
+            var button = document.getElementById("quote_button"); 
+
+            button.addEventListener('click', function() {
+
+                Generate(); 
+            }); 
+
+            function Generate() {
+
+                const quote_url = "https://api.quotable.io/random"; 
+
+                fetch(quote_url) 
+                    .then(response => {
+                        if(!response.ok) {
+                            throw new Error(`API request failed with status: ${response.status}`); 
+                        }
+
+                        return response.json(); 
+                    })
+
+                    .then(quote_data => {
+
+                        quote_area.innerHTML = `"${quote_data.content}" <br> - ${quote_data.author}`; 
+                      
+                    });    
+            }
+        </script>
+    </body>
+</html>

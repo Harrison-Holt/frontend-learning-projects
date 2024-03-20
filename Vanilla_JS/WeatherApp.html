@@ -1,0 +1,234 @@
+<!--
+    Harrison S. Holt 
+    February 5, 2023
+
+    In this project, you can create a web application that allows users to check the weather forecast for a specific location. This project will help you learn about integrating APIs, handling user input, and displaying dynamic data. Here are the features you can include:
+
+    Features:
+
+    Location Input: Allow users to enter a city or location for which they want to check the weather.
+
+    API Integration: Integrate with a weather API (such as OpenWeatherMap or Weather API) to fetch weather data for the specified location.
+
+    Display Weather Information: Display weather information for the selected location, including temperature, humidity, wind speed, and weather conditions.
+
+    Icons and Images: Use weather icons and images to visually represent the weather conditions (e.g., sun for clear skies, clouds for cloudy weather).
+
+    Search History: Keep a history of searched locations so that users can easily check the weather for previously searched places.
+
+    Error Handling: Handle errors gracefully, such as displaying a message when the entered location is not found.
+
+    Responsive Design: Ensure that the weather app is responsive and looks good on various devices.
+
+    Unit Conversion: Allow users to switch between Celsius and Fahrenheit for temperature display.
+
+    Current Location: Optionally, implement a feature to detect and display the weather for the user's current location.
+-->
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather App In JS</title>
+    <style>
+
+        body {
+
+            background-color: #FFFDD0;
+        }
+
+        #viewing_area {
+
+            margin: auto;
+            width: 50%;
+            border: 2px solid green; 
+            padding: 10px; 
+        }
+
+        #search {
+
+            margin: auto;
+            width: 50%;
+            border: 2px solid green; 
+            padding: 10px; 
+        }
+
+        img {
+
+            height: 100px;
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div id="viewing_area">
+    <h1>Weather App</h1>
+
+    <input type="text" id="user_input" placeholder="Enter a city and state (e.g., Atlanta, GA)">
+    <button id="button">Submit</button>
+
+    <div id="weatherInfo">
+        <h2>Weather in <span id="city_name"></span></h2>
+        <div id="weather_details">
+            <p>Temperature: <span id="temperature"></span></p>
+            <p>Humidity: <span id="humidity"></span></p>
+            <p>Wind Speed: <span id="wind_speed"></span></p>
+            <p>Conditions: <span id="weather_conditions"></span></p><img id="weather_icon" src="" alt="Weather Icon">
+           
+        </div>
+    </div>
+    </div>
+
+    <br><br>
+
+    <div id="search">
+    <h2>Search History</h2>
+    <ul id="search_history"></ul>
+    </div>
+
+    <script>
+
+// Define variables
+const api_key = '458722f18f6385edb2b2d7d1a025ade1';
+const user_input = document.getElementById("user_input");
+const user_button = document.getElementById("button");
+const city_name = document.getElementById("city_name");
+const temperature = document.getElementById("temperature");
+const humidity = document.getElementById("humidity");
+const wind_speed = document.getElementById("wind_speed");
+const weather_conditions = document.getElementById("weather_conditions");
+const search_history = document.getElementById("search_history");
+
+let currentLocation = null;
+
+// Add an event listener to fetch weather for current location when the page loads
+window.addEventListener("load", function () {
+    getCurrentLocationWeather();
+});
+
+user_button.addEventListener('click', function() {
+    const location = user_input.value; 
+
+    if(location) {
+
+        convertLocationToCoordinates(location); 
+    }
+}); 
+
+
+function convertLocationToCoordinates(location) {
+    // Use Nominatim for geocoding
+    const geocoding_url = `https://nominatim.openstreetmap.org/search?format=json&q=${location}`;
+
+    fetch(geocoding_url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Geocoding request failed with status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(geocodingData => {
+            if (geocodingData && geocodingData.length > 0) {
+                const locationData = geocodingData[0];
+                const latitude = parseFloat(locationData.lat);
+                const longitude = parseFloat(locationData.lon);
+                const locationName = locationData.display_name; // Extract location name
+
+                // Use the obtained latitude and longitude to fetch weather data
+                get_weather_data(latitude, longitude, locationName);
+            } else {
+                // Show alert for invalid input
+                alert('Invalid location input. Please enter a valid city and state.');
+                // Clear the input box
+                user_input.value = '';
+                console.error('Error: Location not found in geocoding response.');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching coordinates:', error);
+            // Handle errors (e.g., display an error message to the user)
+        });
+}
+
+
+function get_weather_data(latitude, longitude, locationName) {
+    const weather_url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=imperial&appid=${api_key}`;
+
+  fetch(weather_url) 
+    .then(response => {
+        if (!reponse.ok) {
+            throw new Error(`API request failed with status: ${reponse.status}`); 
+        }
+        return reponse.json()
+    }) 
+ 
+        .then(weatherData => {
+            // Handle the weather data
+            console.log(weatherData);
+            const locationName = currentLocation ? currentLocation.name : `${latitude}, ${longitude}`;
+            city_name.textContent = locationName;
+            temperature.textContent = weatherData.main.temp;
+            humidity.textContent = weatherData.main.humidity;
+            wind_speed.textContent = weatherData.wind.speed;
+            weather_conditions.textContent = weatherData.weather[0].description;
+
+            // Set the weather icon based on the weather condition
+            const weatherIconCode = weatherData.weather[0].icon;
+            const weatherIconUrl = `http://openweathermap.org/img/wn/${weatherIconCode}.png`;
+            weather_icon.src = weatherIconUrl;
+
+            // Add location to search history (optional)
+            if (currentLocation) {
+                // Clear current location after displaying it
+                currentLocation = null;
+            } else {
+                addToSearchHistory(locationName);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching weather data:', error);
+            // Handle errors (e.g., display an error message to the user)
+        });
+}
+// Function to add locations to search history (optional)
+function addToSearchHistory(location) {
+    const listItem = document.createElement('li');
+    listItem.textContent = location;
+    search_history.appendChild(listItem);
+}
+
+// Function to get the user's current location and fetch weather data
+function getCurrentLocationWeather() {
+    if (!currentLocation) { // Check if currentLocation is not already set
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                // Store the current location with a name
+                currentLocation = {
+                    name: 'Current Location', // You can customize this name
+                    latitude,
+                    longitude
+                };
+
+                // Update the title with the current location name
+                city_name.textContent = currentLocation.name;
+
+                // Use the obtained latitude and longitude to fetch weather data
+                get_weather_data(latitude, longitude, currentLocation.name);
+            }, error => {
+                console.error('Error getting current location:', error);
+            });
+        } else {
+            console.error('Geolocation is not supported by this browser.');
+        }
+    } else {
+        // Current location is already set, fetch weather data for it
+        get_weather_data(currentLocation.latitude, currentLocation.longitude, currentLocation.name);
+        city_name.textContent = currentLocation.name; // Update the title with the current location name
+    }
+}
+    </script>
+</body>
+</html>

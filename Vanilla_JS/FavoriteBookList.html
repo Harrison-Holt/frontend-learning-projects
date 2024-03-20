@@ -1,0 +1,44 @@
+<!--Create an interface that allows users to add their favorite books to a list and remove selected books from that list.-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>JS Books</title>
+    </head>
+    <body>
+
+        <h1>Favorite Books List</h1>
+
+        <input id="Books" type="text" placeholder="Enter a book">
+        <button id="button">Submit</button>
+        <ul id="list"></ul>
+
+        <script>
+
+            var button = document.getElementById("button"); 
+            var list = document.getElementById("list"); 
+
+            button.addEventListener('click', function() {
+
+                var book = document.getElementById("Books").value.trim(); 
+
+                if(book) {
+                var li = document.createElement('li'); 
+                li.textContent = book; 
+
+                var removeBtn = document.createElement('button'); 
+                removeBtn.textContent= 'Remove'; 
+                removeBtn.onclick = function() {
+                    li.remove(); 
+                }; 
+
+                li.appendChild(removeBtn); 
+
+                document.getElementById("list").appendChild(li); 
+
+                }
+
+                document.getElementById("Books").value = ''; 
+            }); 
+        </script>
+    </body>
+</html>
