@@ -1,0 +1,46 @@
+body, html {
+    height: 100%; 
+    padding: 0; 
+    margin: 0; 
+}
+main {
+    min-height: 100%;
+    flex-grow: 1;
+    align-items: center;
+    background-color: white;
+}
+header, footer {
+    background-color: #3D465D;
+    padding: 15px;
+}
+header {
+    margin-top: 150px;
+}
+header h1 {
+    color: white; 
+} 
+footer p {
+    color: white; 
+}
+
+#quiz-container {
+    width: 50%; 
+    align-items: center;
+    padding: 15px; 
+    background-color: #CDDCEF;
+}
+#question {
+    font-size: 24px;
+    padding: 15px;
+}
+#answers {
+    font-size: 24px;
+    padding: 15px;
+}
+
+#answers li {
+    list-style-type: none;
+}
+#answers li:hover {
+    background-color: #AAB9C9;
+}

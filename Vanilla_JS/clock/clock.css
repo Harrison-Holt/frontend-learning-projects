@@ -1,0 +1,40 @@
+body, html {
+    height: 100%; 
+    padding: 0; 
+    margin: 0; 
+}
+header {
+    background-color: #1B2732;
+}
+header h1 {
+    color: white; 
+    padding: 15px; 
+}
+main {
+    min-height: 100vh;
+    background-color: #5C888D;
+    align-items: center;
+}
+footer {
+    background-color: #1B2732;
+}
+footer p {
+    color: white; 
+    padding: 15px; 
+}
+.date {
+    padding: 15px; 
+    font-size: 36px;
+    font-family: 'Merriweather';
+}
+.time {
+    padding: 15px; 
+    font-size: 36px;
+    font-family: 'Roboto';
+}
+#clock {
+    background-color: white;
+    border-radius: 25px;
+    padding: 15px; 
+    align-items: center;
+}
